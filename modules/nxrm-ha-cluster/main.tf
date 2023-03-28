@@ -130,7 +130,7 @@ resource "kubernetes_deployment" "nxrm3" {
             value_from {
               secret_key_ref {
                 name = "nxrm-secrets"
-                key  = "pgsql_password"
+                key  = "db_password"
               }
             }
           }
@@ -172,7 +172,7 @@ resource "kubernetes_deployment" "nxrm3" {
         volume {
           name = "nxrm3-secrets"
           secret {
-            secret_name = "sonatype-nxrm3"
+            secret_name = "nxrm-secrets"
           }
         }
       }

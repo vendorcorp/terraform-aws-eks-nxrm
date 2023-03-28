@@ -17,7 +17,7 @@
 # --------------------------------------------------------------------------
 
 output "nxrm_ha_k8s_namespace" {
-  value = kubernetes_namespace.nxrm.metadata.name
+  value = local.namespace
 }
 
 output "nxrm_ha_k8s_service_id" {
@@ -25,5 +25,5 @@ output "nxrm_ha_k8s_service_id" {
 }
 
 output "nxrm_ha_k8s_service_name" {
-  value = kubernetes_service.nxrm3.metadata.name
+  value = "nxrm3-ha-${var.nxrm_name}-svc"
 }

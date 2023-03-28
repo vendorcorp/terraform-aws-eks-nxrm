@@ -29,5 +29,5 @@ resource "random_string" "pg_user_password" {
 locals {
   pg_database_name = "nxrm_${random_string.pg_suffix.result}"
   pg_user_username = "nxrm_${random_string.pg_suffix.result}"
-  pg_user_password = random_string.pgsql_user_password.result
+  pg_user_password = random_string.pg_user_password.result
 }
