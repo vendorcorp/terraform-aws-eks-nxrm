@@ -2,8 +2,11 @@
 
 This repository contains a Terraform Module that will deploy an Active-Active Cluster of Nexus Repository Manager Pro.
 
-*More coming soon!*
+It has some pre-requisites:
+- You have already got a PostgreSQL service available, know where it is and have ADMIN access to it
+- You have a valid Sonatype license file for Nexus Repository Pro
 
+An exmaple using this module can be found in [tools-nxrm-ha-cluster](https://github.com/vendorcorp/tools-nxrm-ha-cluster).
 
 # The Fine Print
 
