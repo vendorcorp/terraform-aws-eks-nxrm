@@ -17,13 +17,5 @@
 # --------------------------------------------------------------------------
 
 output "nxrm_ha_k8s_namespace" {
-  value = kubernetes_namespace.nxrm.metadata.name
-}
-
-output "nxrm_ha_k8s_service_id" {
-  value = kubernetes_service.nxrm3.id
-}
-
-output "nxrm_ha_k8s_service_name" {
-  value = kubernetes_service.nxrm3.metadata.name
+  value = module.nxrm_ha_cluster.nxrm_ha_k8s_namespace
 }

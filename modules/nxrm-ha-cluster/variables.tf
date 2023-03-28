@@ -56,9 +56,8 @@ variable "replica_count" {
   default     = 1
   validation {
     condition     = var.replica_count > 0
-    error_message = "Replica Count must be greater than zero"
+    error_message = "Replica Count must be greater than zero."
   }
-
 }
 
 variable "db_hostname" {

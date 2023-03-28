@@ -38,7 +38,7 @@ terraform {
 # --------------------------------------------------------------------------
 resource "kubernetes_namespace" "nxrm" {
   metadata {
-    name = var.namespace
+    name = local.namespace
     annotations = {
       "nxrm_purpose" = "${var.nxrm_name}"
     }
@@ -51,7 +51,7 @@ resource "kubernetes_namespace" "nxrm" {
 resource "kubernetes_secret" "nxrm" {
   metadata {
     name      = "nxrm-secrets"
-    namespace = var.namespace
+    namespace = local.namespace
     annotations = {
       "nxrm_purpose" = "${var.nxrm_name}"
     }
@@ -74,7 +74,7 @@ resource "kubernetes_secret" "nxrm" {
 resource "kubernetes_deployment" "nxrm3" {
   metadata {
     name      = "nxrm3-ha-${var.nxrm_name}"
-    namespace = var.namespace
+    namespace = local.namespace
     labels = {
       app = "nxrm3-ha"
     }
@@ -186,7 +186,7 @@ resource "kubernetes_deployment" "nxrm3" {
 resource "kubernetes_service" "nxrm3" {
   metadata {
     name      = "nxrm3-ha-${var.nxrm_name}-svc"
-    namespace = var.namespace
+    namespace = local.namespace
     labels = {
       app = "nxrm3-ha"
     }
@@ -206,43 +206,3 @@ resource "kubernetes_service" "nxrm3" {
     type = "NodePort"
   }
 }
-
-# --------------------------------------------------------------------------
-# Create k8s Ingress
-# --------------------------------------------------------------------------
-# resource "kubernetes_ingress_v1" "nxrm3" {
-#   metadata {
-#     name      = "nxrm3-ha-${var.nxrm_name}-ig"
-#     namespace = var.namespace
-#     labels = {
-#       app = "nxrm3-ha"
-#     }
-#     annotations = {
-#       "kubernetes.io/ingress.class"               = "alb"
-#       "alb.ingress.kubernetes.io/group.name"      = "vencorcorp-shared-core"
-#       "alb.ingress.kubernetes.io/scheme"          = "internal"
-#       "alb.ingress.kubernetes.io/certificate-arn" = module.shared.vendorcorp_net_cert_arn
-#     }
-#   }
-
-#   spec {
-#     rule {
-#       host = "nxrm-ha.corp.${module.shared.dns_zone_public_name}"
-#       http {
-#         path {
-#           path = "/*"
-#           backend {
-#             service {
-#               name = "nxrm3-ha-${var.nxrm_name}-svc"
-#               port {
-#                 number = 8081
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
-
-#   wait_for_load_balancer = true
-# }

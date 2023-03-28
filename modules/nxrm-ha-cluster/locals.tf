@@ -22,5 +22,5 @@ resource "random_string" "nxrm_suffix" {
 }
 
 locals {
-  namespace = "nxrm_${random_string.nxrm_suffix.result}"
+  namespace = "nxrm-${random_string.nxrm_suffix.result}"
 }

@@ -25,9 +25,9 @@ variable "default_resource_tags" {
 variable "nxrm_name" {
   description = "Helpful friendly name for this NXRM Cluster (min 8 alpha characters)"
   type        = string
-  default     = null
   validation {
-    condition = length(regex("[[:alpha:]]{6,}", var.nxrm_name)) > 6
+    condition     = length(regex("[[:alpha:]]{6,}", var.nxrm_name)) > 6
+    error_message = "Name for this NXRM must be 6 or more alpha characters."
   }
 }
 
@@ -56,7 +56,7 @@ variable "replica_count" {
   default     = 1
   validation {
     condition     = var.replica_count > 0
-    error_message = "Replica Count must be greater than zero"
+    error_message = "Replica Count must be greater than zero."
   }
 }
 
