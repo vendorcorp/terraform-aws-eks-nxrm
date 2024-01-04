@@ -96,10 +96,6 @@ resource "kubernetes_deployment" "nxrm3" {
       }
 
       spec {
-        node_selector = {
-          instancegroup = "shared"
-        }
-
         init_container {
           name    = "chown-nexusdata-owner-to-nexus-and-init-log-dir"
           image   = "busybox:1.33.1"

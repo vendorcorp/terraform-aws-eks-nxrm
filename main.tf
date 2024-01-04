@@ -20,7 +20,7 @@
 # Require a minimum version of Terraform and Providers
 # --------------------------------------------------------------------------
 terraform {
-  required_version = ">= 1.0.11"
+  required_version = ">= 1.4.5"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -43,6 +43,7 @@ terraform {
 module "nxrm_pg_database" {
   source = "./modules/nxrm-pg-db"
 
+  prefix            = var.prefix
   pg_hostname       = var.pg_hostname
   pg_port           = var.pg_port
   pg_admin_username = var.pg_admin_username

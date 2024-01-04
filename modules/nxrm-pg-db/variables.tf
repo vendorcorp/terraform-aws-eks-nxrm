@@ -16,6 +16,16 @@
 #
 # --------------------------------------------------------------------------
 
+variable "prefix" {
+  description = "Prefix used for resources such as database and usernames."
+  type        = string
+  default     = null
+  validation {
+    condition     = length(var.prefix) > 6
+    error_message = "Name for this NXRM must be 6 or more alpha characters."
+  }
+}
+
 variable "pg_hostname" {
   description = "The hostname where your PostgreSQL service is accessible at."
   type        = string

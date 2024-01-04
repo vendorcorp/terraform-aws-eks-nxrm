@@ -1,6 +1,6 @@
-# Terraform Module: Nexus Repository Manager Pro
+# Terraform Module: Sonatype Nexus Repository Manager Pro
 
-This repository contains a Terraform Module that will deploy an Active-Active Cluster of Nexus Repository Manager Pro.
+This repository contains a Terraform Module that will deploy an Active-Active Cluster of Sonatype Nexus Repository Manager Pro.
 
 It has some pre-requisites:
 - You have already got a PostgreSQL service available, know where it is and have ADMIN access to it

@@ -20,7 +20,7 @@
 # Require a minimum version of Terraform and Providers
 # --------------------------------------------------------------------------
 terraform {
-  required_version = ">= 1.0.11"
+  required_version = ">= 1.4.5"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -33,19 +33,28 @@ terraform {
   }
 }
 
-# --------------------------------------------------------------------------
-# Create a unique database for NXRM
-# --------------------------------------------------------------------------
+################################################################################
+# PostgreSQL Provider
+################################################################################
+provider "postgresql" {
+  scheme          = "awspostgres"
+  host            = var.pg_hostname
+  port            = var.pg_port
+  database        = "postgres"
+  username        = var.pg_admin_username
+  password        = var.pg_admin_password
+  sslmode         = "require"
+  connect_timeout = 15
+  superuser       = false
+}
+
+################################################################################
+# Create a Database for Keycloak
+################################################################################
 resource "postgresql_role" "nxrm" {
   name     = local.pg_user_username
   login    = true
   password = local.pg_user_password
-}
-
-resource "postgresql_grant_role" "grant_root" {
-  role              = var.pg_admin_username
-  grant_role        = postgresql_role.nxrm.name
-  with_admin_option = true
 }
 
 resource "postgresql_database" "nxrm" {

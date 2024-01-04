@@ -23,11 +23,11 @@ variable "default_resource_tags" {
 }
 
 variable "nxrm_name" {
-  description = "Helpful friendly name for this NXRM Cluster (min 8 alpha characters)"
+  description = "Helpful friendly name for this NXRM Cluster (min 4 alphanumeric characters)"
   type        = string
   validation {
-    condition     = length(regex("[[:alpha:]]{6,}", var.nxrm_name)) > 6
-    error_message = "Name for this NXRM must be 6 or more alpha characters."
+    condition     = length(regex("[[:alnum:]]{4,}", var.nxrm_name)) > 4
+    error_message = "Name for this NXRM must be 4 or more alphanumeric characters."
   }
 }
 
