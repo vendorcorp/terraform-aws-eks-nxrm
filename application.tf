@@ -130,7 +130,7 @@ resource "kubernetes_deployment" "nxrm3" {
 
           env {
             name  = "DB_NAME"
-            value = module.nxrm_pg_database.user_username
+            value = module.nxrm_pg_database.database_name
           }
 
           env {

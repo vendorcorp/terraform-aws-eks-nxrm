@@ -23,7 +23,7 @@ module "nxrm_pg_database" {
   pg_port           = var.pg_port
   pg_admin_username = var.pg_admin_username
   pg_admin_password = var.pg_admin_password
-  database_name     = "${var.database_name_prefix}-${local.database_name_suffix}"
-  user_username     = "${var.database_name_prefix}-${local.database_name_suffix}"
+  database_name     = "${var.database_name_prefix}_${local.database_name_suffix}"
+  user_username     = "${var.database_name_prefix}_${local.database_name_suffix}"
   # Password generated and returned
 }
