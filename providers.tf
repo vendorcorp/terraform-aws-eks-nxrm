@@ -26,42 +26,13 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.6.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.19.0"
+    }
     postgresql = {
       source  = "cyrilgdn/postgresql"
       version = ">= 1.15.0"
     }
   }
-}
-
-################################################################################
-# PostgreSQL Provider
-################################################################################
-provider "postgresql" {
-  scheme          = "awspostgres"
-  host            = var.pg_hostname
-  port            = var.pg_port
-  database        = "postgres"
-  username        = var.pg_admin_username
-  password        = var.pg_admin_password
-  sslmode         = "require"
-  connect_timeout = 15
-  superuser       = false
-}
-
-################################################################################
-# Create a Database for Keycloak
-################################################################################
-resource "postgresql_role" "nxrm" {
-  name     = local.pg_user_username
-  login    = true
-  password = local.pg_user_password
-}
-
-resource "postgresql_database" "nxrm" {
-  name              = local.pg_database_name
-  owner             = local.pg_user_username
-  template          = "template0"
-  lc_collate        = "C"
-  connection_limit  = -1
-  allow_connections = true
 }

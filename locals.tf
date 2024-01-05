@@ -16,11 +16,17 @@
 #
 # --------------------------------------------------------------------------
 
-resource "random_string" "pgsql_user_password" {
-  length  = 16
+resource "random_string" "identifier" {
+  length  = 12
+  special = false
+}
+
+resource "random_string" "pg_suffix" {
+  length  = 10
   special = false
 }
 
 locals {
-  pgsql_user_password = random_string.pgsql_user_password.result
+  database_name_suffix  = random_string.pg_suffix.result
+  identifier            = "nxrm-${lower(random_string.identifier.result)}"
 }

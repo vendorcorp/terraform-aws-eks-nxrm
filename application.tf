@@ -17,30 +17,14 @@
 # --------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------
-# Require a minimum version of Terraform and Providers
-# --------------------------------------------------------------------------
-terraform {
-  required_version = ">= 1.0.11"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.6.0"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = ">= 2.19.0"
-    }
-  }
-}
-
-# --------------------------------------------------------------------------
 # Create k8s Namespace
 # --------------------------------------------------------------------------
 resource "kubernetes_namespace" "nxrm" {
   metadata {
-    name = local.namespace
+    name        = var.target_namespace
     annotations = {
-      "nxrm_purpose" = "${var.nxrm_name}"
+      "nxrm.sonatype.com/cluster-id"  = local.identifier
+      "nxrm.sonatype.com/purpose"     = var.purpose
     }
   }
 }
@@ -50,22 +34,46 @@ resource "kubernetes_namespace" "nxrm" {
 # --------------------------------------------------------------------------
 resource "kubernetes_secret" "nxrm" {
   metadata {
-    name      = "nxrm-secrets"
-    namespace = local.namespace
+    name        = "nxrm-secrets"
+    namespace   = kubernetes_namespace.nxrm.metadata[0].name
     annotations = {
-      "nxrm_purpose" = "${var.nxrm_name}"
+      "nxrm.sonatype.com/cluster-id"  = local.identifier
+      "nxrm.sonatype.com/purpose"     = var.purpose
     }
   }
 
   binary_data = {
-    "license.lic" = filebase64("${var.nxrm_license_file}")
+    "license.lic"   = filebase64("${var.nxrm_license_file}")
   }
 
   data = {
-    "db_password" = var.db_password
+    "psql_password" = module.nxrm_pg_database.user_password
   }
 
   type = "Opaque"
+}
+
+# --------------------------------------------------------------------------
+# Create k8s PVC
+# --------------------------------------------------------------------------
+resource "kubernetes_persistent_volume_claim" "nxrm3" {
+  metadata {
+    generate_name = "nxrm3-data-"
+    namespace     = kubernetes_namespace.nxrm.metadata[0].name
+    annotations = {
+      "nxrm.sonatype.com/cluster-id"  = local.identifier
+      "nxrm.sonatype.com/purpose"     = var.purpose
+    }
+  }
+  spec {
+    access_modes       = ["ReadWriteMany"]
+    storage_class_name = var.storage_class_name
+    resources {
+      requests = {
+        storage = var.storage_volume_size
+      }
+    }
+  }
 }
 
 # --------------------------------------------------------------------------
@@ -73,8 +81,12 @@ resource "kubernetes_secret" "nxrm" {
 # --------------------------------------------------------------------------
 resource "kubernetes_deployment" "nxrm3" {
   metadata {
-    name      = "nxrm3-ha-${var.nxrm_name}"
-    namespace = local.namespace
+    name            = "nxrm3-ha"
+    namespace       = kubernetes_namespace.nxrm.metadata[0].name
+    annotations     = {
+      "nxrm.sonatype.com/cluster-id"  = local.identifier
+      "nxrm.sonatype.com/purpose"     = var.purpose
+    }
     labels = {
       app = "nxrm3-ha"
     }
@@ -96,15 +108,15 @@ resource "kubernetes_deployment" "nxrm3" {
       }
 
       spec {
-        init_container {
-          name    = "chown-nexusdata-owner-to-nexus-and-init-log-dir"
-          image   = "busybox:1.33.1"
-          command = ["/bin/sh"]
-          args = [
-            "-c",
-            ">- mkdir -p /nexus-data/etc/logback && mkdir -p /nexus-data/log/tasks && mkdir -p /nexus-data/log/audit && touch -a /nexus-data/log/tasks/allTasks.log && touch -a /nexus-data/log/audit/audit.log && touch -a /nexus-data/log/request.log && chown -R '200:200' /nexus-data"
-          ]
-        }
+        # init_container {
+        #   name    = "chown-nexusdata-owner-to-nexus-and-init-log-dir"
+        #   image   = "busybox:1.33.1"
+        #   command = ["/bin/sh"]
+        #   args = [
+        #     "-c",
+        #     ">- mkdir -p /nexus-data/etc/logback && mkdir -p /nexus-data/log/tasks && mkdir -p /nexus-data/log/audit && touch -a /nexus-data/log/tasks/allTasks.log && touch -a /nexus-data/log/audit/audit.log && touch -a /nexus-data/log/request.log && chown -R '200:200' /nexus-data"
+        #   ]
+        # }
 
         container {
           image             = "sonatype/nexus3:${var.nxrm_version}"
@@ -113,12 +125,12 @@ resource "kubernetes_deployment" "nxrm3" {
 
           env {
             name  = "DB_HOST"
-            value = var.db_hostname
+            value = var.pg_hostname
           }
 
           env {
             name  = "DB_NAME"
-            value = var.db_database
+            value = module.nxrm_pg_database.database_name
           }
 
           env {
@@ -126,19 +138,19 @@ resource "kubernetes_deployment" "nxrm3" {
             value_from {
               secret_key_ref {
                 name = "nxrm-secrets"
-                key  = "db_password"
+                key  = "psql_password"
               }
             }
           }
 
           env {
             name  = "DB_PORT"
-            value = var.db_port
+            value = var.pg_port
           }
 
           env {
             name  = "DB_USER"
-            value = var.db_username
+            value = module.nxrm_pg_database.user_username
           }
 
           env {
@@ -163,12 +175,24 @@ resource "kubernetes_deployment" "nxrm3" {
             mount_path = "/nxrm3-secrets"
             name       = "nxrm3-secrets"
           }
+
+          volume_mount {
+            mount_path = "/nexus-blob-storage"
+            name       = "nxrm3-data"
+          }
         }
 
         volume {
           name = "nxrm3-secrets"
           secret {
             secret_name = "nxrm-secrets"
+          }
+        }
+
+        volume {
+          name = "nxrm3-data"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.nxrm3.metadata[0].name
           }
         }
       }
@@ -181,9 +205,13 @@ resource "kubernetes_deployment" "nxrm3" {
 # --------------------------------------------------------------------------
 resource "kubernetes_service" "nxrm3" {
   metadata {
-    name      = "nxrm3-ha-${var.nxrm_name}-svc"
-    namespace = local.namespace
-    labels = {
+    name          = "nxrm3-svc"
+    namespace     = kubernetes_namespace.nxrm.metadata[0].name
+    annotations   = {
+      "nxrm.sonatype.com/cluster-id"  = local.identifier
+      "nxrm.sonatype.com/purpose"     = var.purpose
+    }
+    labels        = {
       app = "nxrm3-ha"
     }
   }
