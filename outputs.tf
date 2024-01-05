@@ -16,14 +16,14 @@
 #
 # --------------------------------------------------------------------------
 
-output "nxrm_ha_k8s_namespace" {
-  value = module.nxrm_ha_cluster.nxrm_ha_k8s_namespace
+output "nxrm_identifier" {
+  value = local.identifier
 }
 
-output "nxrm_ha_k8s_service_id" {
-  value = module.nxrm_ha_cluster.nxrm_ha_k8s_service_id
+output "nxrm_ha_service_id" {
+  value = kubernetes_service.nxrm3.id
 }
 
-output "nxrm_ha_k8s_service_name" {
-  value = module.nxrm_ha_cluster.nxrm_ha_k8s_service_name
+output "nxrm_ha_service_name" {
+  value = kubernetes_service.nxrm3.metadata[0].name
 }
