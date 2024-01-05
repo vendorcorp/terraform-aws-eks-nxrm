@@ -35,7 +35,7 @@ resource "kubernetes_namespace" "nxrm" {
 resource "kubernetes_secret" "nxrm" {
   metadata {
     name        = "nxrm-secrets"
-    namespace   = var.target_namespace
+    namespace   = kubernetes_namespace.nxrm.metadata[0].name
     annotations = {
       "nxrm.sonatype.com/cluster-id"  = local.identifier
       "nxrm.sonatype.com/purpose"     = var.purpose
@@ -59,7 +59,7 @@ resource "kubernetes_secret" "nxrm" {
 resource "kubernetes_persistent_volume_claim" "nxrm3" {
   metadata {
     generate_name = "nxrm3-data-"
-    namespace     = var.target_namespace
+    namespace     = kubernetes_namespace.nxrm.metadata[0].name
     annotations = {
       "nxrm.sonatype.com/cluster-id"  = local.identifier
       "nxrm.sonatype.com/purpose"     = var.purpose
@@ -82,7 +82,7 @@ resource "kubernetes_persistent_volume_claim" "nxrm3" {
 resource "kubernetes_deployment" "nxrm3" {
   metadata {
     name            = "nxrm3-ha"
-    namespace       = var.target_namespace
+    namespace       = kubernetes_namespace.nxrm.metadata[0].name
     annotations     = {
       "nxrm.sonatype.com/cluster-id"  = local.identifier
       "nxrm.sonatype.com/purpose"     = var.purpose
@@ -206,7 +206,7 @@ resource "kubernetes_deployment" "nxrm3" {
 resource "kubernetes_service" "nxrm3" {
   metadata {
     name          = "nxrm3-svc"
-    namespace     = var.target_namespace
+    namespace     = kubernetes_namespace.nxrm.metadata[0].name
     annotations   = {
       "nxrm.sonatype.com/cluster-id"  = local.identifier
       "nxrm.sonatype.com/purpose"     = var.purpose
