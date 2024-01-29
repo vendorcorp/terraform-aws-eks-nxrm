@@ -46,8 +46,8 @@ It has some pre-requisites:
 |------|-------------|------|---------|:--------:|
 | <a name="input_database_name_prefix"></a> [database\_name\_prefix](#input\_database\_name\_prefix) | Prefix for the PostgreSQL database name. | `string` | `"nxrm"` | no |
 | <a name="input_default_resource_tags"></a> [default\_resource\_tags](#input\_default\_resource\_tags) | List of tags to apply to all resources created in AWS | `map(string)` | `{}` | no |
-| <a name="input_nxrm_license_file"></a> [nxrm\_license\_file](#input\_nxrm\_license\_file) | Path to a valid Sonatype License file for Nexus Repository Manager Pro. | `string` | n/a | yes |
-| <a name="input_nxrm_version"></a> [nxrm\_version](#input\_nxrm\_version) | Version of Sonatype Nexus Repository to deploy. | `string` | `"3.63.0"` | no |
+| <a name="input_nxrm_license_data"></a> [nxrm\_license\_data](#input\_nxrm\_license\_data) | Sonatype License data for Nexus Repository Manager Pro (base64 encoded). | `string` | n/a | yes |
+| <a name="input_nxrm_version"></a> [nxrm\_version](#input\_nxrm\_version) | Version of Sonatype Nexus Repository to deploy. | `string` | `"3.64.0"` | no |
 | <a name="input_pg_admin_password"></a> [pg\_admin\_password](#input\_pg\_admin\_password) | Administrator/Root password to access your PostgreSQL service. | `string` | `null` | no |
 | <a name="input_pg_admin_username"></a> [pg\_admin\_username](#input\_pg\_admin\_username) | Administrator/Root user to access your PostgreSQL service. | `string` | `null` | no |
 | <a name="input_pg_hostname"></a> [pg\_hostname](#input\_pg\_hostname) | The hostname where your PostgreSQL service is accessible at. | `string` | `null` | no |
@@ -65,7 +65,7 @@ It has some pre-requisites:
 | <a name="output_nxrm_ha_service_id"></a> [nxrm\_ha\_service\_id](#output\_nxrm\_ha\_service\_id) | n/a |
 | <a name="output_nxrm_ha_service_name"></a> [nxrm\_ha\_service\_name](#output\_nxrm\_ha\_service\_name) | n/a |
 | <a name="output_nxrm_identifier"></a> [nxrm\_identifier](#output\_nxrm\_identifier) | n/a |
-
+z
 
 # The Fine Print
 
