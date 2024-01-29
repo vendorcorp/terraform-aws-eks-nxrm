@@ -63,19 +63,19 @@ variable "purpose" {
   }
 }
 
-variable "nxrm_license_file" {
-  description = "Path to a valid Sonatype License file for Nexus Repository Manager Pro."
+variable "nxrm_license_data" {
+  description = "Sonatype License data for Nexus Repository Manager Pro (base64 encoded)."
   type        = string
   validation {
-    condition     = length(var.nxrm_license_file) > 5
-    error_message = "Name for this NXRM must be 6 or more alpha characters."
+    condition     = length(var.nxrm_license_data) > 50
+    error_message = "License data is likely incomplete - it is very short!"
   }
 }
 
 variable "nxrm_version" {
   description = "Version of Sonatype Nexus Repository to deploy."
   type        = string
-  default     = "3.63.0"
+  default     = "3.64.0"
   validation {
     condition     = length(var.nxrm_version) > 5
     error_message = "Version must be supplied as X.Y.Z to match the Docker Image Tag."

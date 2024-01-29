@@ -43,7 +43,7 @@ resource "kubernetes_secret" "nxrm" {
   }
 
   binary_data = {
-    "license.lic"   = filebase64("${var.nxrm_license_file}")
+    "license.lic"   = "${var.nxrm_license_data}"
   }
 
   data = {
