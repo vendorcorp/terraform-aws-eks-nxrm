@@ -26,7 +26,7 @@ It has some pre-requisites:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_nxrm_pg_database"></a> [nxrm\_pg\_database](#module\_nxrm\_pg\_database) | git::ssh://git@github.com/vendorcorp/terraform-aws-rds-database.git | v0.1.0 |
+| <a name="module_nxrm_pg_database"></a> [nxrm\_pg\_database](#module\_nxrm\_pg\_database) | git::ssh://git@github.com/vendorcorp/terraform-aws-rds-database.git | v0.1.1 |
 
 ## Resources
 
@@ -65,7 +65,7 @@ It has some pre-requisites:
 | <a name="output_nxrm_ha_service_id"></a> [nxrm\_ha\_service\_id](#output\_nxrm\_ha\_service\_id) | n/a |
 | <a name="output_nxrm_ha_service_name"></a> [nxrm\_ha\_service\_name](#output\_nxrm\_ha\_service\_name) | n/a |
 | <a name="output_nxrm_identifier"></a> [nxrm\_identifier](#output\_nxrm\_identifier) | n/a |
-z
+
 
 # The Fine Print
 
