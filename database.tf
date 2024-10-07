@@ -17,7 +17,7 @@
 # --------------------------------------------------------------------------
 
 module "nxrm_pg_database" {
-  source            = "git::ssh://git@github.com/vendorcorp/terraform-aws-rds-database.git?ref=v0.1.0"
+  source = "git::ssh://git@github.com/vendorcorp/terraform-aws-rds-database.git?ref=v0.1.1"
 
   pg_hostname       = var.pg_hostname
   pg_port           = var.pg_port
