@@ -1,0 +1,26 @@
+name: Release
+
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+    push:
+        branches:
+            - main
+        paths-ignore:
+            - '*.md'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    id-token: write
+    contents: write
+    issues: write
+    pull-requests: write
+
+jobs:
+    release:
+        uses: vendorcorp/shared-workflows/.github/workflows/release-create.yaml@main
+        secrets: inherit
